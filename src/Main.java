@@ -4,6 +4,9 @@ import com.enigma.repository.CustomerRepoImpl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,6 +31,16 @@ public class Main {
             customerRepoImpl.addCustomer(mhmdSulton);
             customerRepoImpl.addCustomer(wiwinWirda);
              */
+
+            Customer mhmdSulton = new Customer(
+                    "Maryam", "Sukabumi", "1945-09-03", "IRT", "08765432142"
+            );
+            Customer wiwinWirda = new Customer(
+                    "Otang", "Sukabumi", "1939-01-12", "Wiraswasta", "082414423512"
+            );
+
+            List<Customer> customers = Arrays.asList(mhmdSulton, wiwinWirda);
+            customerRepoImpl.addBulkCustomer(customers);
 
            /*
             Update data

@@ -15,4 +15,6 @@ public interface CustomerRepo {
     public void updateById(Customer customer) throws SQLException;
 
     public void deleteById(Integer id) throws SQLException;
+
+    public void addBulkCustomer(List<Customer> customers) throws SQLException;
 }

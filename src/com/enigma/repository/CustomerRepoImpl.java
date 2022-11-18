@@ -110,6 +110,22 @@ public class CustomerRepoImpl implements CustomerRepo {
         System.out.println("Id " + id + " berhasil dihapus");
     }
 
+    public void addBulkCustomer(List<Customer> customers) throws SQLException {
+        String sql = "INSERT INTO mst_customer(name, address, birth_date, status, phone) VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        for (Customer c: customers) {
+            setCustomer(c, statement);
+            statement.addBatch();
+        }
+
+        statement.executeBatch();
+        statement.close();
+
+        System.out.println(customers.size() + " data telah ditambahkan");
+    }
+
     private void setCustomer(Customer customer, PreparedStatement statement) throws SQLException {
         statement.setString(1, customer.getName());
         statement.setString(2, customer.getAddress());
