@@ -1,15 +1,22 @@
 import com.enigma.db.Connector;
+import com.enigma.model.Customer;
 import com.enigma.repository.CustomerRepoImpl;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
+        Connection connect = null;
+
         try {
             // Membuat connector, untuk mengkoneksikan aplikasi kita ke ke database
             Connector conn = new Connector();
-            CustomerRepoImpl customerRepoImpl = new CustomerRepoImpl(conn);
+            connect = conn.connect();
+            CustomerRepoImpl customerRepoImpl = new CustomerRepoImpl(connect);
 
             /*
-            Insert Data Customer
+            Insert customer
 
             Customer mhmdSulton = new Customer(
                      "Muhammad Sulton", "Sukabumi", "1995-09-03", "Co Trainer", "08765432142"
@@ -51,6 +58,14 @@ public class Main {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (connect != null) {
+                    connect.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
