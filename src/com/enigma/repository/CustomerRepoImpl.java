@@ -14,15 +14,18 @@ public class CustomerRepoImpl implements CustomerRepo {
     }
 
     public void addCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO mst_customer(name, address, birth_date, status, phone) VALUES (?, ?, ?, ?, ?)";
 
+        // Menyiapkan sql statement
+        String sql = "INSERT INTO mst_customer(name, address, birth_date, status, phone) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(sql);
+
         setCustomer(customer, statement);
 
-        // Melakukan eksekusi kueri ke database / memasukan data ke database
+        // Eksekusi update statement ke database
+        // digunakan untuk memanipulasi database (tambah, update dan delete)
         statement.executeUpdate();
 
-        // Menutup statement setelah melakukan eksekusi
+        // Menutup statement setelah melakukan eksekusi queri
         statement.close();
 
         System.out.println("Data " + customer.getName() + " masuk");
@@ -32,13 +35,15 @@ public class CustomerRepoImpl implements CustomerRepo {
         Customer customer = null;
 
         String sql = "SELECT * FROM mst_customer WHERE id = ?";
-
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setInt(1, id);
 
+        // Eksekusi query statement
         ResultSet resultSet = statement.executeQuery();
 
+        // Perlu menjalankan result.next method setiap kali melakukan eksekusi query
+        // agar data dapat diambil dari pointernya
         while (resultSet.next()) {
             Integer customerId = resultSet.getInt("id");
             String customerName = resultSet.getString("name");
@@ -117,17 +122,22 @@ public class CustomerRepoImpl implements CustomerRepo {
 
         for (Customer c: customers) {
             setCustomer(c, statement);
+            // Menambah individual statement ke dalam batch
             statement.addBatch();
         }
 
+        // Eksekusi batch, untuk memulai eksekusi dari kumpulan data secara bersamaan / 1 kali eksekusi
         statement.executeBatch();
         statement.close();
 
         System.out.println(customers.size() + " data telah ditambahkan");
     }
 
+    // Untuk menentukan value pada index statement
+    // simbol ? mewakili value yang belum ditentukan (lihat di method yang memanggil setCustomer method)
+    // (?, ?) berarti ada 2 index: simbol ? sebelah kiri adalah index 1, sedangkan kanan adalah index 2
     private void setCustomer(Customer customer, PreparedStatement statement) throws SQLException {
-        statement.setString(1, customer.getName());
+        statement.setString(1, customer.getAddress());
         statement.setString(2, customer.getAddress());
         statement.setDate(3, Date.valueOf(customer.getBirthDate()));
         statement.setString(4, customer.getStatus());

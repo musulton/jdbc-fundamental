@@ -3,7 +3,6 @@ package com.enigma.model;
 public class Customer {
     private Integer id;
     private String name, address, birthDate, status, phone;
-
     public Customer(Integer id, String name, String address, String birthDate, String status, String phone) {
         this.id = id;
         this.birthDate = birthDate;
